@@ -133,6 +133,17 @@
         "No GitHub Release is created without a pushed tag.",
         "The exact rejection is reported and the run stops."
       ]
+    },
+    {
+      "id": 13,
+      "prompt": "The v1.3.0 release was just created from an annotated tag. Verify it points at the intended commit.",
+      "expected_output": "A verification that peels the annotated tag before comparing, and reports a match rather than a false mismatch.",
+      "assertions": [
+        "The tag is resolved with git rev-parse '<tag>^{commit}' or the peeled refs/tags/<tag>^{} row.",
+        "A raw git ls-remote refs/tags/<tag> SHA is not compared directly against a commit SHA.",
+        "No false mismatch is reported for an annotated tag that points at the correct commit.",
+        "No tag is moved, recreated, or deleted during verification."
+      ]
     }
   ]
 }

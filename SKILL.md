@@ -40,7 +40,7 @@ Stop on an ambiguous remote, detached HEAD, unresolved merge, dirty tree, missin
 
 Tags and published releases are immutable here. Never force-push; never move, rewrite, or re-point a tag; never delete a published release.
 
-Resolve a tag to its commit with `git rev-parse '<tag>^{commit}'`, which works for annotated and lightweight tags alike.
+Resolve a tag to its commit with `git rev-parse '<tag>^{commit}'`, which works for annotated and lightweight tags alike. Never compare a raw `git ls-remote refs/tags/<tag>` SHA against a commit: for an annotated tag that row is the tag object and will not match. Read the peeled `refs/tags/<tag>^{}` row instead, which lightweight tags do not have.
 
 Use literal repository names, branches, versions, tags, and paths in mutating commands. Never pass unreviewed command output into shell substitutions.
 
@@ -125,7 +125,7 @@ A version mismatch inside an already-tagged tree is disclosed in the notes or co
 
 ## Verify
 
-Fetch, then confirm the remote tag resolves to the intended commit. Inspect the release and confirm its URL, tag, title, notes, draft/prerelease state, and target commit. Confirm the version declarations in the tagged tree agree with the release version. Report the release URL, version, commit, included range, and validations.
+Fetch, then confirm the remote tag resolves to the intended commit — compare `git rev-parse '<tag>^{commit}'` against the target, not a raw `ls-remote` SHA. Inspect the release and confirm its URL, tag, title, notes, draft/prerelease state, and target commit. Confirm the version declarations in the tagged tree agree with the release version. Report the release URL, version, commit, included range, and validations.
 
 If a step fails before anything is pushed, stop and preserve the working state for inspection.
 
