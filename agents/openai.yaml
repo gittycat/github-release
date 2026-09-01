@@ -1,4 +1,4 @@
 interface:
   display_name: "GitHub Release"
   short_description: "Prepare and publish verified GitHub releases"
-  default_prompt: "Use $github-release to prepare and publish a verified GitHub release with concise release notes."
+  default_prompt: "Use $github-release to plan the next GitHub release. Show the proposed version, the included changes, the exact tag, and the draft notes before creating or publishing anything."

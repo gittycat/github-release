@@ -38,23 +38,23 @@
     {
       "id": 4,
       "prompt": "Preview an initial GitHub release for a repository with no tags and no version declaration. Do not modify the repository.",
-      "expected_output": "A no-write initial-release plan proposing v0.1.0 and requiring confirmation before choosing v1.0.0.",
+      "expected_output": "A no-write initial-release plan proposing version 0.1.0 tagged v0.1.0, and requiring confirmation before choosing 1.0.0.",
       "assertions": [
-        "The proposed initial version is v0.1.0.",
-        "The plan does not treat v0.1.0 as a previous release.",
+        "The proposed initial version is 0.1.0.",
+        "The exact tag shown in the preview is v0.1.0, the default prefix when no tags exist.",
+        "The plan does not treat 0.1.0 as a previous release.",
         "The response does not create a version file merely because none exists.",
         "No mutation is performed."
       ]
     },
     {
       "id": 5,
-      "prompt": "Prepare the v3.2.1 release plan, but do not execute it. GitHub reports that main requires pull requests, one approval, and signed commits.",
-      "expected_output": "A two-stage plan that puts release metadata on a release branch and pull request, waits for merge, then tags the actual merged commit and publishes the release.",
+      "prompt": "Prepare the v3.2.1 release plan, but do not execute it. The user mentions that main requires pull requests and one approval.",
+      "expected_output": "A no-write plan that states the protected-branch pull-request flow is outside this skill and stops, without improvising one.",
       "assertions": [
-        "The plan does not attempt to push the release commit directly to main.",
-        "No release tag is created before the pull request merges.",
-        "The actual merged commit is re-fetched and verified before tagging.",
-        "Required review and signing rules are preserved.",
+        "The response states that the pull-request release flow is out of scope and stops there.",
+        "No pull-request, release-branch, or merge-queue workflow is improvised.",
+        "The plan does not propose bypassing review or required checks.",
         "No mutation is performed during the preview."
       ]
     },
@@ -67,6 +67,71 @@
         "The default proposal is v0.5.0.",
         "Promotion to v1.0.0 requires an explicit user choice.",
         "No mutation is performed."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Go ahead and cut and publish the release. The prior tag is v1.4.0, the net diff adds one feature, main is unprotected, and package.json declares 1.4.0.",
+      "expected_output": "A full v1.5.0 release: version bump committed as release metadata, tag pushed, then the GitHub Release created from the pushed tag.",
+      "assertions": [
+        "package.json is updated to 1.5.0 and committed alone as release metadata, defaulting to chore(release): v1.5.0.",
+        "The proposed bump is minor because the net diff adds a feature.",
+        "The tag is pushed before the release is created, and gh release create is invoked with --verify-tag and --notes-file.",
+        "No release automation, workflow, or registry publishing step is added."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Make a draft GitHub Release for the current commit and write the notes. Prior tag is v2.0.0 and the net diff is two bug fixes.",
+      "expected_output": "A published-as-draft v2.0.1 release created with the draft flag, reported explicitly as not published.",
+      "assertions": [
+        "The request is read as creating a remote draft release, not as a preview that stops after the plan.",
+        "The tag is created and pushed before the release, and gh release create includes --draft.",
+        "The result is reported as a draft that is not yet published, with its URL.",
+        "No preview-only stop occurs after authorization was given."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Publish the v3.1.0 release. The release commit is ready but the push to main is rejected because the branch now requires a pull request.",
+      "expected_output": "A safe stop with the release commit unpushed and untagged, and the rejection reported.",
+      "assertions": [
+        "The release commit is pushed before any tag is created, so the rejection leaves nothing tagged.",
+        "No force push, tag move, or history rewrite is attempted.",
+        "The local commit and the exact rejection are reported, and the run stops.",
+        "No pull-request release flow is improvised."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Release it. Prior tag v0.9.3, one fix in the net diff, no version file in the repository, and the tag pushed successfully but gh release create failed with a transient server error.",
+      "expected_output": "A recovery report that leaves the pushed tag in place, retries only the idempotent release creation, and skips the release commit because no version is declared.",
+      "assertions": [
+        "No release commit is created, since the repository declares no version and no other release metadata changed.",
+        "The already-pushed v0.9.4 tag is left as pushed and is not deleted or moved.",
+        "Only the idempotent gh release create step is retried.",
+        "The exact recovery command or next action is reported if the retry does not succeed."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Cut the next release. Heads up: this repo already runs release-please, which owns the version bump and the changelog.",
+      "expected_output": "A report that the repository already automates releases, and a stop rather than a competing manual release.",
+      "assertions": [
+        "The stated release automation is treated as owning the version and changelog.",
+        "No version file, changelog, tag, or GitHub Release is created alongside it.",
+        "The conflict is reported plainly and the run stops."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Publish v1.6.0. The release commit pushed to main successfully, but pushing the tag was rejected by a tag ruleset.",
+      "expected_output": "A stop that leaves the pushed release commit in place, reports the tag as local-only, and creates no release.",
+      "assertions": [
+        "The pushed release commit is left on the branch and is not reverted or rewritten.",
+        "The tag is reported as existing only locally, and is not force-pushed or recreated under another name.",
+        "No GitHub Release is created without a pushed tag.",
+        "The exact rejection is reported and the run stops."
       ]
     }
   ]
