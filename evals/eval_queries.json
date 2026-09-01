@@ -1,0 +1,102 @@
+[
+  {
+    "query": "Cut the next GitHub release from everything merged since v1.8.2.",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "Can you publish a new release for this repo with short notes?",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "Prepare a release preview and tell me whether these commits make a patch or minor version.",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "GitHub has tag v0.4.0 but no release page for it. Backfill that release.",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "Ship all five fixes since the last tag as one release.",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "Make a draft GitHub Release for the current commit and write the notes.",
+    "should_trigger": true,
+    "split": "train"
+  },
+  {
+    "query": "bump only the version in pyproject.toml to 2.1.4; don't tag or release anything",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "Tag this exact commit v1.2.0 and push the tag, but do not create a GitHub Release.",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "Publish the current package to PyPI.",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "Update CHANGELOG.md for the work we did this week.",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "Commit my changes with a Conventional Commit message and push main.",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "Set up semantic-release and a GitHub Actions release workflow.",
+    "should_trigger": false,
+    "split": "train"
+  },
+  {
+    "query": "We're ready to ship. Work out the next version, update the manifests, tag it, and put concise notes on GitHub.",
+    "should_trigger": true,
+    "split": "validation"
+  },
+  {
+    "query": "plz make the next gh relase, all current fixes should go together",
+    "should_trigger": true,
+    "split": "validation"
+  },
+  {
+    "query": "Prepare release notes for the changes since the previous version and show me the release plan before publishing.",
+    "should_trigger": true,
+    "split": "validation"
+  },
+  {
+    "query": "Publish v2.0.0-rc.1 as a GitHub prerelease from the existing remote tag.",
+    "should_trigger": true,
+    "split": "validation"
+  },
+  {
+    "query": "Explain where GitHub displays repository tags and releases.",
+    "should_trigger": false,
+    "split": "validation"
+  },
+  {
+    "query": "List the existing versions and tell me which one is currently latest. Do not create anything.",
+    "should_trigger": false,
+    "split": "validation"
+  },
+  {
+    "query": "Open a pull request for my current feature branch.",
+    "should_trigger": false,
+    "split": "validation"
+  },
+  {
+    "query": "Review our release process and suggest improvements, but don't prepare or publish a release.",
+    "should_trigger": false,
+    "split": "validation"
+  }
+]

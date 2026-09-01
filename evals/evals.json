@@ -1,0 +1,73 @@
+{
+  "skill_name": "github-release",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Prepare only; do not mutate anything. Plan the next release from v1.2.3. The reachable net changes are three fix commits and one docs commit, and all manifests still declare 1.2.3.",
+      "expected_output": "A no-write plan for one v1.2.4 release containing all effective changes, with every authoritative project version declaration identified and concise draft release notes.",
+      "assertions": [
+        "The proposed version is v1.2.4 and the plan explains that all included non-empty changes require at least a patch.",
+        "The workflow proposes one release rather than one release per fix commit.",
+        "The notes summarize net outcomes rather than reproducing the commit log.",
+        "The plan updates and validates every authoritative project version declaration.",
+        "No files, commits, tags, pushes, pull requests, or GitHub Releases are created."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Preview the next release without making changes. Reachable tags are v2.3.0 and v2.4.1. Since v2.4.1 there is one feat, two fixes, and a refactor, but one fix was later fully reverted.",
+      "expected_output": "A no-write v2.5.0 plan using v2.4.1 as the baseline and notes that omit the fully reverted fix.",
+      "assertions": [
+        "The selected baseline is v2.4.1 based on SemVer precedence among the relevant reachable tags.",
+        "The proposed bump is minor because an effective feature remains.",
+        "The reverted fix is excluded from the release notes.",
+        "The response is a preview and performs no mutations."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Prepare a backfill plan only. Remote lightweight tag v0.4.0 exists without a GitHub Release, while a stable v0.5.0 GitHub Release is already published.",
+      "expected_output": "A no-write existing-tag plan that verifies v0.4.0 without requiring an annotated-tag peel row, keeps v0.5.0 as Latest, and does not change version files or tags.",
+      "assertions": [
+        "The existing-tag mode is selected.",
+        "The tag commit is resolved in a way that works for a lightweight tag.",
+        "The planned GitHub CLI invocation includes --latest=false.",
+        "No version bump, tag rewrite, or new tag is proposed."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Preview an initial GitHub release for a repository with no tags and no version declaration. Do not modify the repository.",
+      "expected_output": "A no-write initial-release plan proposing v0.1.0 and requiring confirmation before choosing v1.0.0.",
+      "assertions": [
+        "The proposed initial version is v0.1.0.",
+        "The plan does not treat v0.1.0 as a previous release.",
+        "The response does not create a version file merely because none exists.",
+        "No mutation is performed."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Prepare the v3.2.1 release plan, but do not execute it. GitHub reports that main requires pull requests, one approval, and signed commits.",
+      "expected_output": "A two-stage plan that puts release metadata on a release branch and pull request, waits for merge, then tags the actual merged commit and publishes the release.",
+      "assertions": [
+        "The plan does not attempt to push the release commit directly to main.",
+        "No release tag is created before the pull request merges.",
+        "The actual merged commit is re-fetched and verified before tagging.",
+        "Required review and signing rules are preserved.",
+        "No mutation is performed during the preview."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Preview the next release from v0.4.2. The net diff has a breaking API change, and the repository documents no pre-1.0 versioning policy.",
+      "expected_output": "A no-write plan proposing v0.5.0 by default, explaining that SemVer leaves 0.x increments unconstrained, and requiring explicit approval before selecting v1.0.0.",
+      "assertions": [
+        "The plan does not claim that SemVer requires v1.0.0.",
+        "The default proposal is v0.5.0.",
+        "Promotion to v1.0.0 requires an explicit user choice.",
+        "No mutation is performed."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Release"
+  short_description: "Prepare and publish verified GitHub releases"
+  default_prompt: "Use $github-release to prepare and publish a verified GitHub release with concise release notes."
